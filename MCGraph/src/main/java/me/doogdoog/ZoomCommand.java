@@ -31,8 +31,9 @@ public class ZoomCommand implements CommandExecutor {
 		else
 			plugin.zoom /= zoomAmount;
 		
-		Bukkit.broadcastMessage("Zoomed " + zoomDir + " to x" + df.format(plugin.zoom));
+		Bukkit.broadcastMessage("§aZooming " + zoomDir + " to §lx" + df.format(plugin.zoom) + "§r§a...");
 		plugin.reloadGraph(sender);
+		Bukkit.broadcastMessage("§aDone");
 		
 		return true;
 	}

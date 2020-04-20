@@ -15,9 +15,11 @@ public class MCGraphPlugin extends JavaPlugin {
 	
 	public int graphSize = 30;
 	public double zoom = 1;
+	public Coordinate origin = new Coordinate(0, 128, 0);
 	
 	private List<String> curEquations;
 	private Set<Coordinate> filledBlocks;
+	
 	
 	public void onEnable() {
 		getCommand("graph").setExecutor(new GraphCommand(this));
@@ -49,21 +51,18 @@ public class MCGraphPlugin extends JavaPlugin {
 	
 	public void reloadGraph(CommandSender sender) {
 		
-		Bukkit.broadcastMessage("§b§lReloading the graph... this might take a while");
-		
 		// clear the graph
 		for(Coordinate coord : filledBlocks)
 			coord.getBlock().setType(Material.AIR);
 		
 		filledBlocks.clear();
 		
-		
 		// re-graph each equation
 		for(String equation : curEquations) {
 			Bukkit.dispatchCommand(sender, "graph " + equation);
 		}
 		
-		Bukkit.broadcastMessage("§b§lSuccessfully reloaded the graph");
+		
 		
 	}
 	
@@ -73,13 +72,29 @@ public class MCGraphPlugin extends JavaPlugin {
 		
 		// x and z axes
 		for(int i = -graphSize; i <= graphSize; i++) {
-			world.getBlockAt(i, 128, 0).setType(Material.BLACK_CONCRETE);
-			world.getBlockAt(0, 128, i).setType(Material.BLACK_CONCRETE);
+			world.getBlockAt(i, origin.y, origin.z).setType(Material.BLACK_CONCRETE);
+			world.getBlockAt(origin.x, origin.y, i).setType(Material.BLACK_CONCRETE);
 		}
 		
 		// y axis
 		for(int i = 2; i < 256; i++) {
-			world.getBlockAt(0, i, 0).setType(Material.BLACK_CONCRETE);
+			world.getBlockAt(origin.x, i, origin.z).setType(Material.BLACK_CONCRETE);
+		}
+	}
+	
+	public void eraseAxes() {
+		
+		World world = Bukkit.getWorlds().get(0);
+		
+		// x and z axes
+		for(int i = -graphSize; i <= graphSize; i++) {
+			world.getBlockAt(i, origin.y, origin.z).setType(Material.AIR);
+			world.getBlockAt(origin.x, origin.y, i).setType(Material.AIR);
+		}
+		
+		// y axis
+		for(int i = 2; i < 256; i++) {
+			world.getBlockAt(origin.x, i, origin.z).setType(Material.AIR);
 		}
 	}
 }

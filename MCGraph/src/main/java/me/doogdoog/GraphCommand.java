@@ -58,8 +58,8 @@ public class GraphCommand implements CommandExecutor {
 		int[][] yVals = new int[2 * plugin.graphSize + 1][2 * plugin.graphSize + 1];
 		
 		// fill in one block per x/z coordinate
-		for(int x = -plugin.graphSize; x <= plugin.graphSize; x++) {
-			for(int z = -plugin.graphSize; z <= plugin.graphSize; z++) {
+		for(int x = plugin.origin.x - plugin.graphSize; x <= plugin.origin.x + plugin.graphSize; x++) {
+			for(int z = plugin.origin.z - plugin.graphSize; z <= plugin.origin.z + plugin.graphSize; z++) {
 				int r = x + plugin.graphSize, c = z + plugin.graphSize;
 				
 				yVals[r][c] = -1;
@@ -78,11 +78,13 @@ public class GraphCommand implements CommandExecutor {
 				
 				int y = (int) (yFloat * plugin.zoom) + 128;
 				
-				int numZeroes = 0;
-				for(int a : new int[] { x, y, z })
-					numZeroes += a == 0 ? 1 : 0;
+				int sum = 0;
+				if(x == plugin.origin.x) sum++;
+				if(y == plugin.origin.y) sum++;
+				if(z == plugin.origin.y) sum++;
+				boolean onAxis = sum > 1;
 				
-				if(y > 255 || y < 2 || numZeroes > 1 /* on an axis */ ) continue;
+				if(y > 255 || y < 2 || onAxis) continue;
 				
 				yVals[r][c] = y;
 				Coordinate coord = new Coordinate(x, y, z);
@@ -92,8 +94,8 @@ public class GraphCommand implements CommandExecutor {
 		}
 		
 		// fill in vertical gaps
-		for(int x = -plugin.graphSize; x <= plugin.graphSize; x++) {
-			for(int z = -plugin.graphSize; z <= plugin.graphSize; z++) {
+		for(int x = plugin.origin.x - plugin.graphSize; x <= plugin.origin.x + plugin.graphSize; x++) {
+			for(int z = plugin.origin.z - plugin.graphSize; z <= plugin.origin.z + plugin.graphSize; z++) {
 				int r = x + plugin.graphSize, c = z + plugin.graphSize;
 				
 				if(yVals[r][c] == -1) continue;
@@ -102,12 +104,10 @@ public class GraphCommand implements CommandExecutor {
 				int ymin = ycenter, ymax = ycenter;
 				
 				for(int i = 0; i < 4; i++) {
-					int yadj = ycenter;
-					try {
-						yadj = yVals[r+dirs[i]][c+dirs[i+1]];
-					} catch(Exception e) {
+					int radj = r + dirs[i], cadj = c + dirs[i+1];
+					if(radj < 0 || radj > 2 * plugin.graphSize || cadj < 0 || cadj > 2 * plugin.graphSize)
 						continue;
-					}
+					int yadj = yVals[radj][cadj];
 					if(yadj == -1) continue;
 					
 					ymin = Math.min(ymin, yadj);
@@ -124,7 +124,7 @@ public class GraphCommand implements CommandExecutor {
 		}
 		
 			
-		Bukkit.broadcastMessage("§aSuccessfully graphed §l" + equation);
+		Bukkit.broadcastMessage("§aDone");
 		return true;
 	}
 	

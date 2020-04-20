@@ -27,10 +27,15 @@ public class SetGraphSizeCommand implements CommandExecutor {
 			}
 		}
 		
-		plugin.graphSize = Integer.parseInt(args[0]);
+		Bukkit.broadcastMessage("§aSetting the graph size to §l" + args[0] + "§r§a...");
 		
-		Bukkit.broadcastMessage("§a§lSet the graph size to " + args[0]);
+		plugin.eraseAxes();
+		plugin.graphSize = Integer.parseInt(args[0]);
+		plugin.drawAxes();
+		
 		plugin.reloadGraph(sender);
+		
+		Bukkit.broadcastMessage("§aDone");
 		
 		return true;
 		
