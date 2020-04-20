@@ -1,16 +1,9 @@
 package me.doogdoog;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import com.udojava.evalex.Expression;
 
 
 public class GraphCommand implements CommandExecutor {
