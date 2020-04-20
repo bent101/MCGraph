@@ -8,4 +8,4 @@ A 3D Graphing Minecraft Bukkit plugin.
 4. Go to (0, 0) and start graphing :)
 
 # Examples
-MCGraph/examples/01.png
+![](MCGraph/examples/01.png)
