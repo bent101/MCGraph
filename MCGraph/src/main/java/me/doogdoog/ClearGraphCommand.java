@@ -25,7 +25,7 @@ public class ClearGraphCommand implements CommandExecutor {
 		plugin.getFilledBlocks().clear();
 		plugin.getCurEquations().clear();
 		
-		Bukkit.broadcastMessage("§aDome");
+		Bukkit.broadcastMessage("§aDone");
 		return true;
 		
 	}

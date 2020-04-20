@@ -14,6 +14,7 @@ public class SetGraphSizeCommand implements CommandExecutor {
 	}
 	
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		
 		if(args.length != 1) {
 			sender.sendMessage("§c§lUsage: /setgraphsize <size in blocks>");
 			return false;

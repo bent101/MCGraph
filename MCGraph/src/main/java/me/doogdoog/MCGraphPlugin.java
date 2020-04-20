@@ -62,8 +62,6 @@ public class MCGraphPlugin extends JavaPlugin {
 			Bukkit.dispatchCommand(sender, "graph " + equation);
 		}
 		
-		
-		
 	}
 	
 	public void drawAxes() {

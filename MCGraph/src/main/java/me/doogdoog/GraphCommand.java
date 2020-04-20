@@ -18,6 +18,7 @@ public class GraphCommand implements CommandExecutor {
 	private final int[] dirs = new int[] {0, 1, 0, -1, 0};
 	
 	private MCGraphPlugin plugin;
+	
 	private final List<Material> possibleMaterials = new ArrayList<Material>(Arrays.asList(
 			Material.RED_CONCRETE,
 			Material.ORANGE_CONCRETE,
