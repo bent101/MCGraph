@@ -1,0 +1,19 @@
+name: MCGraph
+version: 1.0
+main: me.doogdoog.MCGraphPlugin
+description: Graphs 3D functions at (0, 128, 0) in your world
+api-version: 1.15
+commands:
+  graph:
+    usage: /graph y = <a function of x and z>
+    description: Graph y as a function of x and z
+  zoom:
+    usage: /zoom <in or out>
+    description: Zoom the graph in or out
+  cleargraph:
+    usage: /cleargraph
+    description: Clear the graph
+  setgraphsize:
+    usage: /setgraphsize <size in blocks>
+    description: Make the graph bigger or smaller
+  
