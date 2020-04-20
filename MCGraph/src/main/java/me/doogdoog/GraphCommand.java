@@ -17,18 +17,19 @@ public class GraphCommand implements CommandExecutor {
 	
 	private MCGraphPlugin plugin;
 	
-	private final List<Material> possibleMaterials = new ArrayList<Material>(Arrays.asList(
-			Material.RED_CONCRETE,
-			Material.ORANGE_CONCRETE,
-			Material.YELLOW_CONCRETE,
-			Material.LIME_CONCRETE,
-			Material.CYAN_CONCRETE,
-			Material.LIGHT_BLUE_CONCRETE,
-			Material.BLUE_CONCRETE,
-			Material.PURPLE_CONCRETE,
-			Material.MAGENTA_CONCRETE
-	));
-	int curMaterialIndex = 0;
+	private static final Color[] colors = new Color[] {
+			Color.RED,
+			Color.ORANGE,
+			Color.YELLOW,
+			Color.GREEN,
+			Color.AQUA,
+			Color.BLUE,
+			Color.DARK_BLUE,
+			Color.PURPLE,
+			Color.MAGENTA
+	};
+	
+	private int curColorIx = 0;
 	
 	public GraphCommand(MCGraphPlugin plugin) {
 		this.plugin = plugin;
@@ -36,25 +37,34 @@ public class GraphCommand implements CommandExecutor {
 	
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
-		Material material = possibleMaterials.get(curMaterialIndex);
-		curMaterialIndex = (curMaterialIndex + 1) % possibleMaterials.size();
+		String equation = String.join(" ", args).toLowerCase();
+		Color equationColor = null;
 		
-		String equation = String.join("", args).toLowerCase();
-		if(equation.length() < 3) {
-			sender.sendMessage("§c§lThe equation isn't long enough!");
-			return false;
-		}
-		if(!equation.startsWith("y=")) {
-			sender.sendMessage("§c§lThe equation must start with \"y =\"!");
-			return false;
+		if(!(equation.startsWith("y=") || equation.startsWith("y ="))) {
+			sender.sendMessage("§cThe equation must start with \"y =\"!");
+			return true;
 		}
 		
-		plugin.getCurEquations().add(equation);
+		for(Color color : colors) {
+			if(equation.endsWith(plugin.getColorName(color))) {
+				equationColor = color;
+				equation = equation.replace(plugin.getColorName(color), "");
+				break;
+			}
+		}
 		
-		Bukkit.broadcastMessage("§aGraphing §l" + equation + "§r§a ...");
+		if(equationColor == null) {
+			equationColor = colors[curColorIx++];
+			curColorIx %= colors.length;
+		}
 		
-		Thread t = new Thread(new GraphRunnable(plugin, equation, material));
-		t.start();
+		ColoredEquation coloredEquation = new ColoredEquation(equationColor, equation);
+		
+		plugin.getCurEquations().add(coloredEquation);
+		
+		Bukkit.broadcastMessage("§aGraphing §l" + plugin.getColorPrefix(equationColor) + equation + "§r§a ...");
+		
+		Bukkit.getScheduler().runTask(plugin, new GraphRunnable(plugin, coloredEquation));
 			
 		Bukkit.broadcastMessage("§aDone");
 		return true;

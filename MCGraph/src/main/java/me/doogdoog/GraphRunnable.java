@@ -6,20 +6,20 @@ import com.udojava.evalex.Expression;
 
 public class GraphRunnable implements Runnable {
 	
-	private final int[] dirs = new int[] {0, 1, 0, -1, 0};
+	private static final int[] dirs = new int[] {0, 1, 0, -1, 0};
 	
-	private String equation;
-	private Material material;
+	private ColoredEquation equation;
 	private MCGraphPlugin plugin;
 	
-	public GraphRunnable(MCGraphPlugin plugin, String equation, Material material) {
+	public GraphRunnable(MCGraphPlugin plugin, ColoredEquation equation) {
 		this.equation = equation;
-		this.material = material;
 		this.plugin = plugin;
 	}
 	
 	public void run() {
-		Expression expr = new Expression(equation.substring(2));
+		Material material = plugin.getColorConcrete(equation.color);
+		
+		Expression expr = new Expression(equation.equation.substring(equation.equation.indexOf('=')+1));
 		
 		int[][] yVals = new int[2 * plugin.graphSize + 1][2 * plugin.graphSize + 1];
 		
@@ -44,17 +44,15 @@ public class GraphRunnable implements Runnable {
 				
 				int y = (int) (yFloat * plugin.zoom) + 128;
 				
-				int sum = 0;
-				if(x == plugin.origin.x) sum++;
-				if(y == plugin.origin.y) sum++;
-				if(z == plugin.origin.y) sum++;
-				boolean onAxis = sum > 1;
-				
-				if(y > 255 || y < 2 || onAxis) continue;
+				if(y > 255 || y < 2) continue;
 				
 				yVals[r][c] = y;
+				
 				Coordinate coord = new Coordinate(x, y, z);
-				coord.getBlock().setType(material);
+				
+				if(!coord.isOnAxis()) continue;
+				
+				coord.setToMaterial(material);
 				plugin.getFilledBlocks().add(coord);
 			}
 		}
@@ -82,12 +80,14 @@ public class GraphRunnable implements Runnable {
 				
 				for(int y = ymin+1; y <= ymax-1; y++) {
 					Coordinate coord = new Coordinate(x, y, z);
-					coord.getBlock().setType(material);
+					if(coord.isOnAxis()) continue;
+					coord.setToMaterial(material);
 					plugin.getFilledBlocks().add(coord);
 				}
 				
 			}
 		}
+		
 	}
 	
 }

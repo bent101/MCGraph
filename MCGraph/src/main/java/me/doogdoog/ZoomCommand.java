@@ -22,7 +22,7 @@ public class ZoomCommand implements CommandExecutor {
 		
 		if(args.length != 1 || (!args[0].equals("in") && !args[0].equals("out"))) {
 			sender.sendMessage("§c§lUsage: \"/zoom in\" or \"/zoom out\"");
-			return false;
+			return true;
 		}
 		
 		String zoomDir = args[0].toLowerCase();

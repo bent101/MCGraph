@@ -19,7 +19,7 @@ public class ClearGraphCommand implements CommandExecutor {
 		Bukkit.broadcastMessage("§aClearing the graph...");
 		
 		for(Coordinate coord : plugin.getFilledBlocks()) {
-			coord.getBlock().setType(Material.AIR);
+			coord.setToMaterial(Material.AIR);
 		}
 		
 		plugin.getFilledBlocks().clear();

@@ -17,14 +17,14 @@ public class SetGraphSizeCommand implements CommandExecutor {
 		
 		if(args.length != 1) {
 			sender.sendMessage("§c§lUsage: /setgraphsize <size in blocks>");
-			return false;
+			return true;
 		}
 		
 		// checks if the given size is a positive integer
 		for(char c : args[0].toCharArray()) {
 			if(!Character.isDigit(c)) {
 				sender.sendMessage("§c§lThe size must be a positive whole number.");
-				return false;
+				return true;
 			}
 		}
 		

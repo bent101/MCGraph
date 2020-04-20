@@ -1,7 +1,7 @@
 package me.doogdoog;
 
 import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
+import org.bukkit.Material;
 
 public class Coordinate {
 	
@@ -13,8 +13,17 @@ public class Coordinate {
 		this.z = z;
 	}
 	
-	public Block getBlock() {
-		return Bukkit.getWorlds().get(0).getBlockAt(x, y, z);
+	public void setToMaterial(Material material) {
+		Bukkit.getWorlds().get(0).getBlockAt(x, y, z).setType(material);
+	}
+	
+	public boolean isOnAxis() {
+		int numZeroes = 0;
+		if(x == 0) numZeroes++;
+		if(y == 0) numZeroes++;
+		if(z == 0) numZeroes++;
+		
+		return numZeroes > 1;
 	}
 	
 	@Override
