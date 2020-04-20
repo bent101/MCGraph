@@ -27,6 +27,5 @@ public class ClearGraphCommand implements CommandExecutor {
 		
 		Bukkit.broadcastMessage("§aDone");
 		return true;
-		
 	}
 }
